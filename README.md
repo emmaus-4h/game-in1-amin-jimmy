@@ -1,19 +1,19 @@
 Deze game is gebaseerd op het template voor 4HV van het Emmauscollege Rotterdam
 
-## Mijn spel: *naam van het spel*
+## Mijn spel: *Butter Cheese Eggs*
 Gemaakt door:
-- *naam van leerling 1*
-- *naam van leerling 2*
+- *Jimmy*
+- *Amin*
 
 ## Mijn planning
 
 Basis: uitleg, spelen, afgaan en punten
 - [x] maak index.html, style.css en script.js met canvas
-- [ ] teken speler
-- [ ] beweeg speler
-- [ ] ... *(vul zelf aan)*
-- [ ] punten op scherm zetten
-- [ ] punten kunnen scoren
+- [ ] cells maken voor de vakjes
+- [ ] mousepressed functies etc.
+- [ ] kruis en o als er wordt geklikt in een hokje
+- [ ] detectie van als je er 3 op een rij hebt.
+- [ ] 
 - [ ] uitlegscherm
 
 Uitbreiding: *bedenk iets, bijvoorbeeld meer tegenstanders*
