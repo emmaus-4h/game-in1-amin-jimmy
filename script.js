@@ -5,7 +5,6 @@
 /* Game opdracht
    Informatica - Emmauscollege Rotterdam
    Template voor een game in JavaScript met de p5 library
-
    Begin met dit template voor je game opdracht,
    voeg er je eigen code aan toe.
  */
@@ -46,7 +45,7 @@ var score = 0; // aantal behaalde punten
  * Tekent het speelveld
  */
 var tekenVeld = function () {
-  fill("purple");
+  fill("green");
   rect(20, 20, width - 2 * 20, height - 2 * 20);
 };
 
@@ -57,7 +56,8 @@ var tekenVeld = function () {
  * @param {number} y y-coördinaat
  */
 var tekenVijand = function(x, y) {
-    
+  fill("red");
+  ellipse(x, y, 50, 50);
 
 };
 
@@ -79,8 +79,14 @@ var tekenKogel = function(x, y) {
  * @param {number} y y-coördinaat
  */
 var tekenSpeler = function(x, y) {
-  fill("white");
-  ellipse(x, y, 50, 50);
+  fill("blue");
+  rect(x - 3, y, 50, 50);
+  rect(x - 10, y + 50, 60, 100);
+
+  rect(x - 30, y + 50, 20, 100);
+  rect(x + 50, y + 50, 20, 100);
+
+  rect(x - 5, y + 150, 60, 100);
 };
 
 
@@ -88,7 +94,19 @@ var tekenSpeler = function(x, y) {
  * Updatet globale variabelen met positie van vijand of tegenspeler
  */
 var beweegVijand = function() {
-    
+    if (keyIsDown(68)) {
+    vijandX += 5;
+  }
+      if (keyIsDown(65)) {
+    vijandX -= 5;
+  }
+      if (keyIsDown(87)) {
+    vijandY -= 5;
+  }
+      if (keyIsDown(83)) {
+    vijandY += 5;
+  }
+
 };
 
 
@@ -105,7 +123,18 @@ var beweegKogel = function() {
  * Updatet globale variabele spelerX en spelerY
  */
 var beweegSpeler = function() {
-
+    if (keyIsDown(RIGHT_ARROW)) {
+    spelerX += 5;
+  }
+      if (keyIsDown(LEFT_ARROW)) {
+    spelerX -= 5;
+  }
+      if (keyIsDown(UP_ARROW)) {
+    spelerY -= 5;
+  }
+      if (keyIsDown(DOWN_ARROW)) {
+    spelerY += 5;
+  }
 };
 
 
@@ -150,7 +179,7 @@ function setup() {
   createCanvas(1280, 720);
 
   // Kleur de achtergrond blauw, zodat je het kunt zien
-  background('blue');
+  background('darkgreen');
 }
 
 
