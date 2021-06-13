@@ -1,218 +1,101 @@
-/// @ts-check
-/// <reference path=".gitpod/p5.global-mode.d.ts" />
-"use strict";
-
-/* Game opdracht
-   Informatica - Emmauscollege Rotterdam
-   Template voor een game in JavaScript met de p5 library
-   Begin met dit template voor je game opdracht,
-   voeg er je eigen code aan toe.
- */
+const statusText = document.querySelector('.boterkaaseierenstatus');
 
 
+// Boolean als de game bezig is. 
+let gameActief = true;
+// Welke speler begint (Ik heb X gedaan.)
+let momenteleSpeler = "X";
+let spelStatus = ["", "", "", "", "", "", "", "", ""];
+// Wanneer een speler wint vertoont het dit bericht
+const winningMessage = () => `Speler ${momenteleSpeler} heeft gewonnen!`;
+// Wanneer een speler gelijkspel speelt vertoont het dit bericht
+const gelijkspelBericht = () => `Gelijkspel`;
+
+// Wie aan de beurt is.
+const momenteleSpelerBeurt = () => `Speler  ${momenteleSpeler} beurt`;
 
 
-/* ********************************************* */
-/* globale variabelen die je gebruikt in je game */
-/* ********************************************* */
+// Verandert de HTML tekst naar de const momenteleSpelerBeurt
+statusText.innerHTML = momenteleSpelerBeurt();
 
-const UITLEG = 0;
-const SPELEN = 1;
-const GAMEOVER = 2;
-var spelStatus = SPELEN;
+// Wanneer een speler kan winnen 
 
-var spelerX = 200; // x-positie van speler
-var spelerY = 100; // y-positie van speler
+const winKansen = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
 
-var kogelX = 0;    // x-positie van kogel
-var kogelY = 0;    // y-positie van kogel
+// Kijkt wanneer iemand een vakje klikt
+function vakjesHandelaar(geklikteVak, geklikteVakIndex) {
+    spelStatus[geklikteVakIndex] = momenteleSpeler;
+    geklikteVak.innerHTML = momenteleSpeler;
+}
 
-var vijandX = 0;   // x-positie van vijand
-var vijandY = 0;   // y-positie van vijand
+// Verandert de X naar een O als X heeft geklikt.
+function handelaarSpelerVeranderen() {
+    momenteleSpeler = momenteleSpeler === "X" ? "O" : "X";
+    statusText.innerHTML = momenteleSpelerBeurt();
+}
 
-var score = 0; // aantal behaalde punten
+// Kijken als iemand gewonnen heeft.
+function resultaatChecker() {
+    let rondeGewonnen = false;
+    for (let i = 0; i <= 7; i++) {
+        const winKans = winKansen[i];
+        let a = spelStatus[winKans[0]];
+        let b = spelStatus[winKans[1]];
+        let c = spelStatus[winKans[2]];
+        if (a === '' || b === '' || c === '') {
+            continue;
+        }
+        if (a === b && b === c) {
+            rondeGewonnen = true;
+            break
+        }
+    }
+// Als de speler heeft gewonnen verandert hij de HTML text.
+    if (rondeGewonnen) {
+        statusText.innerHTML = winningMessage();
+        gameActief = false;
+        return;
+    }
+// Als het gelijkspel is verandert het de HTML text.
+    let rondeGelijkspel = !spelStatus.includes("");
+    if (rondeGelijkspel) {
+        statusText.innerHTML = gelijkspelBericht();
+        gameActief = false;
+        return;
+    }
 
-
-
-
-
-/* ********************************************* */
-/*      functies die je gebruikt in je game      */
-/* ********************************************* */
-
-
-/**
- * Tekent het speelveld
- */
-var tekenVeld = function () {
-  fill("green");
-  rect(20, 20, width - 2 * 20, height - 2 * 20);
-};
-
-
-/**
- * Tekent de vijand
- * @param {number} x x-coördinaat
- * @param {number} y y-coördinaat
- */
-var tekenVijand = function(x, y) {
-  fill("red");
-  ellipse(x, y, 50, 50);
-
-};
-
-
-/**
- * Tekent de kogel of de bal
- * @param {number} x x-coördinaat
- * @param {number} y y-coördinaat
- */
-var tekenKogel = function(x, y) {
-
-
-};
-
-
-/**
- * Tekent de speler
- * @param {number} x x-coördinaat
- * @param {number} y y-coördinaat
- */
-var tekenSpeler = function(x, y) {
-  fill("blue");
-  rect(x - 3, y, 50, 50);
-  rect(x - 10, y + 50, 60, 100);
-
-  rect(x - 30, y + 50, 20, 100);
-  rect(x + 50, y + 50, 20, 100);
-
-  rect(x - 5, y + 150, 60, 100);
-};
-
-
-/**
- * Updatet globale variabelen met positie van vijand of tegenspeler
- */
-var beweegVijand = function() {
-    if (keyIsDown(68)) {
-    vijandX += 5;
-  }
-      if (keyIsDown(65)) {
-    vijandX -= 5;
-  }
-      if (keyIsDown(87)) {
-    vijandY -= 5;
-  }
-      if (keyIsDown(83)) {
-    vijandY += 5;
-  }
-
-};
-
-
-/**
- * Updatet globale variabelen met positie van kogel of bal
- */
-var beweegKogel = function() {
-
-};
-
-
-/**
- * Kijkt wat de toetsen/muis etc zijn.
- * Updatet globale variabele spelerX en spelerY
- */
-var beweegSpeler = function() {
-    if (keyIsDown(RIGHT_ARROW)) {
-    spelerX += 5;
-  }
-      if (keyIsDown(LEFT_ARROW)) {
-    spelerX -= 5;
-  }
-      if (keyIsDown(UP_ARROW)) {
-    spelerY -= 5;
-  }
-      if (keyIsDown(DOWN_ARROW)) {
-    spelerY += 5;
-  }
-};
-
-
-/**
- * Zoekt uit of de vijand is geraakt
- * @returns {boolean} true als vijand is geraakt
- */
-var checkVijandGeraakt = function() {
-
-  return false;
-};
-
-
-/**
- * Zoekt uit of de speler is geraakt
- * bijvoorbeeld door botsing met vijand
- * @returns {boolean} true als speler is geraakt
- */
-var checkSpelerGeraakt = function() {
-    
-  return false;
-};
-
-
-/**
- * Zoekt uit of het spel is afgelopen
- * @returns {boolean} true als het spel is afgelopen
- */
-var checkGameOver = function() {
-    
-  return false;
-};
-
-
-/**
- * setup
- * de code in deze functie wordt één keer uitgevoerd door
- * de p5 library, zodra het spel geladen is in de browser
- */
-function setup() {
-  // Maak een canvas (rechthoek) waarin je je speelveld kunt tekenen
-  createCanvas(1280, 720);
-
-  // Kleur de achtergrond blauw, zodat je het kunt zien
-  background('darkgreen');
+    handelaarSpelerVeranderen();
 }
 
 
-/**
- * draw
- * de code in deze functie wordt meerdere keren per seconde
- * uitgevoerd door de p5 library, nadat de setup functie klaar is
- */
-function draw() {
-  switch (spelStatus) {
-    case SPELEN:
-      beweegVijand();
-      beweegKogel();
-      beweegSpeler();
-      
-      if (checkVijandGeraakt()) {
-        // punten erbij
-        // nieuwe vijand maken
-      }
-      
-      if (checkSpelerGeraakt()) {
-        // leven eraf of gezondheid verlagen
-        // eventueel: nieuwe speler maken
-      }
+function handelaarVakjesKlik(geklikteVakEvent) {
+    const geklikteVak = geklikteVakEvent.target;
+    const geklikteVakIndex = parseInt(geklikteVak.getAttribute('data-cell-index'));
 
-      tekenVeld();
-      tekenVijand(vijandX, vijandY);
-      tekenKogel(kogelX, kogelY);
-      tekenSpeler(spelerX, spelerY);
+    if (spelStatus[geklikteVakIndex] !== "" || !gameActief) {
+        return;
+    }
 
-      if (checkGameOver()) {
-        spelStatus = GAMEOVER;
-      }
-      break;
-  }
+    vakjesHandelaar(geklikteVak, geklikteVakIndex);
+    resultaatChecker();
 }
+// Als iemand op Herstarten klikt.
+function handelaarSpelHerstarten() {
+    gameActief = true;
+    momenteleSpeler = "X";
+    spelStatus = ["", "", "", "", "", "", "", "", ""];
+    statusText.innerHTML = momenteleSpelerBeurt();
+    document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = "");
+}
+
+document.querySelectorAll('.vak').forEach(cell => cell.addEventListener('click', handelaarVakjesKlik));
+document.querySelector('.herstart').addEventListener('click', handelaarSpelHerstarten);
