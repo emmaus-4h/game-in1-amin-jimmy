@@ -94,7 +94,7 @@ function handelaarSpelHerstarten() {
     momenteleSpeler = "X";
     spelStatus = ["", "", "", "", "", "", "", "", ""];
     statusText.innerHTML = momenteleSpelerBeurt();
-    document.querySelectorAll('.cell').forEach(cell => cell.innerHTML = "");
+    document.querySelectorAll('.vak').forEach(cell => cell.innerHTML = "");
 }
 
 document.querySelectorAll('.vak').forEach(cell => cell.addEventListener('click', handelaarVakjesKlik));

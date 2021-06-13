@@ -21,3 +21,4 @@ Spel status
 
 Uitbreiding: *Herstarten*
 - [x] *Herstart knop*
+c
